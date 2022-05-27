@@ -16,7 +16,7 @@ $ composer require gaowei-space/error-handler -vvv
 ### 1. sentry
 ```php
 $options = [
-    'report_level'   => E_ALL,
+    'report_level'   => E_ALL, // error report level
     'display_errors' => true, // prite errors
     'handler'        => 'sentry', // sentry or logger
     'sentry_options' => [
