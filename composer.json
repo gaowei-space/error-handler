@@ -1,0 +1,24 @@
+{
+    "name": "gaowei-space\/error-handler",
+    "description": "ErrorHandler for catch all php running time errors.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "gaowei",
+            "email": "huyao9950@hotmail.com"
+        }
+    ],
+    "require": {
+        "sentry/sdk": "^3.2",
+        "psr/log": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "GaoweiSpace\\ErrorHandler\\": "src"
+        }
+    },
+    "require-dev": {
+        "monolog/monolog": "^2.6",
+        "vlucas/phpdotenv": "^5.4"
+    }
+}
