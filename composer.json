@@ -1,6 +1,6 @@
 {
     "name": "gaowei-space\/error-handler",
-    "description": "ErrorHandler for catch all php running time errors.",
+    "description": "ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry.",
     "license": "MIT",
     "authors": [
         {
