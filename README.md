@@ -62,6 +62,27 @@ SENTRY_DSN = "http://0c2f5aaca4a14eaf958a050157843090@sentry.yoursentrysite.com/
 php index.php examples/ErrorHandlerTest.php
 ```
 
+## Sentry initialization time-consuming comparison
+```
+$options = [
+    'report_level'   => E_ALL, // error report level
+    'display_errors' => true, // prite errors
+    'handler'        => 'sentry', // sentry or logger
+    'sentry_options' => [
+        'dsn'          => 'http://0c2f5aaca4a14eaf958a050157843090@sentry.yoursentrysite.com/3', // sentry website dsn
+        'environment'  => 'test',
+        'sample_rate'  => 1, // report rate, float range 0-1
+        'http_timeout' => 0.5,
+    ],
+];
+
+Self:
+ErrorHandler::init($options); // time consuming: 0.001616
+
+Sentry:
+\Sentry\init($options['sentry_options']); // time consuming: 0.146600
+```
+
 ## Contributing
 
 You can contribute in one of three ways:
