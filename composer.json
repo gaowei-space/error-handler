@@ -10,7 +10,8 @@
     ],
     "require": {
         "sentry/sdk": "^3.2",
-        "psr/log": "^1.1"
+        "psr/log": "^1.1",
+        "monolog/monolog": "^2.6"
     },
     "autoload": {
         "psr-4": {
@@ -18,7 +19,6 @@
         }
     },
     "require-dev": {
-        "monolog/monolog": "^2.6",
         "vlucas/phpdotenv": "^5.4"
     }
 }
