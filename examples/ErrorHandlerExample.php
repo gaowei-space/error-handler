@@ -6,7 +6,7 @@ use GaoweiSpace\ErrorHandler\ErrorHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
-require __DIR__ . '/BaseExample.php';
+require __DIR__.'/BaseExample.php';
 
 class ErrorHandlerExample
 {
