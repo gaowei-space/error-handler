@@ -1,13 +1,12 @@
 <?php
 
 /**
- * ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry
+ * ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry.
  *
  * @author gaowei <huyao9950@hotmail.com>
  * @date 2022-05-26
  *
  * @copyright gaowei
- *
  */
 
 namespace GaoweiSpace\ErrorHandler;
@@ -17,18 +16,18 @@ use Psr\Log\LogLevel;
 class ErrorHandler
 {
     public $logger;
-    public $handler        = 'logger';  // logger | sentry
+    public $handler = 'logger';  // logger | sentry
     public $display_errors = false;
     public $sentry_options = [];
-    public $report_level   = E_ALL;
+    public $report_level = E_ALL;
 
     public function __construct(array $options = [])
     {
         $this->display_errors = $options['display_errors'];
-        $this->handler        = $options['handler'];
-        $this->logger         = $options['logger'];
+        $this->handler = $options['handler'];
+        $this->logger = $options['logger'];
         $this->sentry_options = $options['sentry_options'];
-        $this->report_level   = $options['report_level'];
+        $this->report_level = $options['report_level'];
     }
 
     public static function init(array $options = [])
@@ -91,9 +90,9 @@ class ErrorHandler
 
     private function _register()
     {
-        register_shutdown_function(array($this, 'handleFatalError'));
-        set_error_handler(array($this, 'handleError'));
-        set_exception_handler(array($this, 'handleException'));
+        register_shutdown_function([$this, 'handleFatalError']);
+        set_error_handler([$this, 'handleError']);
+        set_exception_handler([$this, 'handleException']);
     }
 
     private function _log($type, $message)
@@ -109,7 +108,7 @@ class ErrorHandler
         }
 
         if ($this->display_errors) {
-            print "{$level}: {$message}";
+            echo "{$level}: {$message}";
         }
     }
 
@@ -130,6 +129,7 @@ class ErrorHandler
     private function _formatMessage($message, $file, $line, $trace = '')
     {
         $message = "{$file}#{$line}: {$message}";
+
         return <<<MSG
 $message
 $trace

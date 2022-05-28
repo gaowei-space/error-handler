@@ -1,5 +1,11 @@
 <h1 align="center"> 🌈 error-handler </h1>
 
+![GitHub branch checks state](https://img.shields.io/github/checks-status/gaowei-space/error-handler/main)
+[![Latest Release](https://img.shields.io/github/v/release/gaowei-space/error-handler)](https://github.com/gaowei-space/error-handler/releases)
+![StyleCI build status](https://github.styleci.io/repos/496875473/shield)
+[![PHP Version](https://img.shields.io/packagist/php-v/gaowei-space/error-handler)](https://www.php.net/)
+[![License](https://img.shields.io/github/license/gaowei-space/error-handler)](https://github.com/gaowei-space/error-handler/LICENSE)
+
 <p> ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry. </p>
 
 > Compared with the official instantiation method of sentry, it consumes less server resources because it instantiates sentry and reports the exception only when an exception is caught, which is why this package was born.

@@ -9,6 +9,7 @@
         }
     ],
     "require": {
+        "php": "^7.2|^8.0",
         "sentry/sdk": "^3.2",
         "psr/log": "^1.1",
         "monolog/monolog": "^2.6"

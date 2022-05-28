@@ -12,7 +12,7 @@ class ErrorHandlerExample
 {
     public function testInitLogger($code)
     {
-        $logger = new Logger("errors");
+        $logger = new Logger('errors');
         $logger->pushHandler(new StreamHandler(sprintf('%s/log/errors_%s.log', __DIR__, date('Ymd')), Logger::DEBUG, true, 0666));
 
         $options = [
