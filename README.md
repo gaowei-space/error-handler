@@ -8,7 +8,7 @@
 ## Installing
 
 ```shell
-$ composer require gaowei-space/error-handler -vvv
+composer require gaowei-space/error-handler
 ```
 
 ## Usage
@@ -16,13 +16,13 @@ $ composer require gaowei-space/error-handler -vvv
 ### 1. sentry
 ```php
 $options = [
-    'report_level'   => E_ALL, // error report level
-    'display_errors' => true, // prite errors
+    'report_level'   => E_ALL,
+    'display_errors' => true,
     'handler'        => 'sentry', // sentry or logger
     'sentry_options' => [
-        'dsn'          => 'http://0c2f5aaca4a14eaf958a050157843090@sentry.yoursentrysite.com/3', // sentry website dsn
+        'dsn'          => 'http://0c2f5aaca4a14eaf958a050157843090@sentry.yoursentrysite.com/3',
         'environment'  => 'test',
-        'sample_rate'  => 1, // report rate, float range 0-1
+        'sample_rate'  => 1,
         'http_timeout' => 0.5,
     ],
 ];
@@ -34,32 +34,39 @@ ErrorHandler::init($options);
 
 ### 2. monolog
 ```php
-$logger   = new Logger("php_errors");
-$log_name = sprintf('php_errors_%s.log', date('Ymd'));
-$logger->pushHandler(new StreamHandler("./log/" . $log_name, Logger::DEBUG, true, 0666));
+$logger = new Logger("errors");
+$logger->pushHandler(new StreamHandler(sprintf('%s/log/errors_%s.log', __DIR__, date('Ymd')), Logger::DEBUG, true, 0666));
 
 $options = [
-    'report_level'   => E_ALL, // error report level
-    'display_errors' => true, // prite errors
+    'report_level'   => E_ALL,
+    'display_errors' => true,
     'handler'        => 'logger', // sentry or logger
-    'logger'         => $logger, // monolog loogger
+    'logger'         => $logger,
 ];
 ErrorHandler::init($options);
 ```
 
 ## Test
 
-### 1. cp env file
+### 1. install develop packages
+```
+composer require gaowei-space/error-handler --dev
+```
+
+### 2. cp env file
 ```
 cp examples/.env.example examples/.env
 ```
-### 2. edit env file
+### 3. edit env file
 ```
 SENTRY_DSN = "http://0c2f5aaca4a14eaf958a050157843090@sentry.yoursentrysite.com/3"
 ```
-### 3. run test code
+### 4. run examples
 ```php
-php index.php examples/ErrorHandlerTest.php
+// monolog
+php examples/Monolog.php
+// sentry
+php examples/Sentry.php
 ```
 
 ## Sentry initialization time-consuming comparison

@@ -12,9 +12,8 @@ class ErrorHandlerExample
 {
     public function testInitLogger($code)
     {
-        $logger   = new Logger("errors");
-        $log_name = sprintf('%s/log/errors_%s.log', __DIR__, date('Ymd'));
-        $logger->pushHandler(new StreamHandler($log_name, Logger::DEBUG, true, 0666));
+        $logger = new Logger("errors");
+        $logger->pushHandler(new StreamHandler(sprintf('%s/log/errors_%s.log', __DIR__, date('Ymd')), Logger::DEBUG, true, 0666));
 
         $options = [
             'report_level'   => E_ALL, // error report level
