@@ -1,4 +1,4 @@
-# 🌈 Error-Handler
+# 🎯 Error-Handler
 
 ![GitHub branch checks state](https://img.shields.io/github/checks-status/gaowei-space/error-handler/main)
 [![Latest Release](https://img.shields.io/github/v/release/gaowei-space/error-handler)](https://github.com/gaowei-space/error-handler/releases)
