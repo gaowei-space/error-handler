@@ -1,44 +1,51 @@
 <?php
 
 /**
- * ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry.
+ * ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry
  *
  * @author gaowei <huyao9950@hotmail.com>
- * @date 2022-05-26
- *
+ * @version 1.0.2
  * @copyright gaowei
+ * @created_at 2022-05-26
+ * @updated_at 2022-08-01
  */
 
 namespace GaoweiSpace\ErrorHandler;
 
 use Psr\Log\LogLevel;
+use Sentry\Severity;
 
 class ErrorHandler
 {
     public $logger;
-    public $handler = 'logger';  // logger | sentry
+    public $handler        = 'logger';  // logger | sentry
     public $display_errors = false;
     public $sentry_options = [];
-    public $report_level = E_ALL;
+    public $report_level   = E_ALL;
 
     public function __construct(array $options = [])
     {
         $this->display_errors = $options['display_errors'];
-        $this->handler = $options['handler'];
-        $this->logger = $options['logger'];
+        $this->handler        = $options['handler'];
+        $this->logger         = $options['logger'];
         $this->sentry_options = $options['sentry_options'];
-        $this->report_level = $options['report_level'];
+        $this->report_level   = $options['report_level'];
     }
 
     public static function init(array $options = [])
     {
-        self::_setDefaultOptions($options);
+        $handler = self::create($options);
 
-        error_reporting($options['report_level']);
+        error_reporting($handler->report_level);
         ini_set('log_errors', 1);
 
-        $handler = new static($options);
         $handler->_register();
+    }
+
+    public static function create(array $options = [])
+    {
+        self::_setDefaultOptions($options);
+        return new static($options);
     }
 
     private static function _setDefaultOptions(array &$options)
@@ -56,7 +63,7 @@ class ErrorHandler
     {
         if (!empty($error = error_get_last())) {
             $exception = new \ErrorException(@$error['message'], 0, @$error['type'], @$error['file'], @$error['line']);
-            $this->_sentry($exception);
+            $this->_sentryCaptureException($exception);
 
             $type = $error['type'];
             if ($type & $this->report_level) {
@@ -68,7 +75,7 @@ class ErrorHandler
     public function handleError($type, $message, $file, $line)
     {
         if ($type & $this->report_level) {
-            $this->_sentry(new \ErrorException($message, 0, $type, $file, $line));
+            $this->_sentryCaptureException(new \ErrorException($message, 0, $type, $file, $line));
 
             $this->_log($type, $message);
         }
@@ -76,7 +83,7 @@ class ErrorHandler
 
     public function handleException(\Throwable $exception)
     {
-        $this->_sentry($exception);
+        $this->_sentryCaptureException($exception);
 
         $message = $this->_formatMessage(
             $exception->getMessage(),
@@ -88,31 +95,45 @@ class ErrorHandler
         $this->_log($exception->getCode(), $message);
     }
 
+    public function captureMessage(string $message, string $level)
+    {
+        $this->_sentryCaptureMessage($message, $level);
+
+        $this->_logWrite($message, $level);
+    }
+
     private function _register()
     {
-        register_shutdown_function([$this, 'handleFatalError']);
-        set_error_handler([$this, 'handleError']);
-        set_exception_handler([$this, 'handleException']);
+        register_shutdown_function(array($this, 'handleFatalError'));
+        set_error_handler(array($this, 'handleError'));
+        set_exception_handler(array($this, 'handleException'));
     }
 
     private function _log($type, $message)
     {
         $level = $this->_getErrorLevel($type);
 
-        if ($this->handler == 'logger') {
-            if ($this->logger != null) {
-                $this->logger->log($level, $message);
-            } else {
-                error_log("{$level}: {$message}");
-            }
-        }
+        $this->_logWrite($message, $level);
 
         if ($this->display_errors) {
-            echo "{$level}: {$message}";
+            print "{$level}: {$message}";
         }
     }
 
-    private function _sentry(\Throwable $exception)
+    private function _logWrite(string $message, string $level)
+    {
+        if ($this->handler !== 'logger') {
+            return false;
+        }
+
+        if ($this->logger != null) {
+            $this->logger->log($level, $message);
+        } else {
+            error_log("{$level}: {$message}");
+        }
+    }
+
+    private function _sentryCaptureException(\Throwable $exception)
     {
         if ($this->handler !== 'sentry') {
             return false;
@@ -126,10 +147,23 @@ class ErrorHandler
         \Sentry\captureException($exception);
     }
 
+    private function _sentryCaptureMessage($message, $level)
+    {
+        if ($this->handler !== 'sentry') {
+            return false;
+        }
+
+        if (!$this->sentry_options) {
+            return false;
+        }
+
+        \Sentry\init($this->sentry_options);
+        \Sentry\captureMessage($message, new Severity($level));
+    }
+
     private function _formatMessage($message, $file, $line, $trace = '')
     {
         $message = "{$file}#{$line}: {$message}";
-
         return <<<MSG
 $message
 $trace
