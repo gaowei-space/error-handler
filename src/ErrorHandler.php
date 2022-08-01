@@ -167,6 +167,7 @@ class ErrorHandler
     private function _formatMessage($message, $file, $line, $trace = '')
     {
         $message = "{$file}#{$line}: {$message}";
+
         return <<<MSG
 $message
 $trace
