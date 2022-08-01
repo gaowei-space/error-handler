@@ -1,10 +1,12 @@
 <?php
 
 /**
- * ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry
+ * ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry.
  *
  * @author gaowei <huyao9950@hotmail.com>
+ *
  * @version 1.0.2
+ *
  * @copyright gaowei
  * @created_at 2022-05-26
  * @updated_at 2022-08-01
@@ -18,18 +20,18 @@ use Sentry\Severity;
 class ErrorHandler
 {
     public $logger;
-    public $handler        = 'logger';  // logger | sentry
+    public $handler = 'logger';  // logger | sentry
     public $display_errors = false;
     public $sentry_options = [];
-    public $report_level   = E_ALL;
+    public $report_level = E_ALL;
 
     public function __construct(array $options = [])
     {
         $this->display_errors = $options['display_errors'];
-        $this->handler        = $options['handler'];
-        $this->logger         = $options['logger'];
+        $this->handler = $options['handler'];
+        $this->logger = $options['logger'];
         $this->sentry_options = $options['sentry_options'];
-        $this->report_level   = $options['report_level'];
+        $this->report_level = $options['report_level'];
     }
 
     public static function init(array $options = [])
@@ -45,6 +47,7 @@ class ErrorHandler
     public static function create(array $options = [])
     {
         self::_setDefaultOptions($options);
+
         return new static($options);
     }
 
@@ -104,9 +107,9 @@ class ErrorHandler
 
     private function _register()
     {
-        register_shutdown_function(array($this, 'handleFatalError'));
-        set_error_handler(array($this, 'handleError'));
-        set_exception_handler(array($this, 'handleException'));
+        register_shutdown_function([$this, 'handleFatalError']);
+        set_error_handler([$this, 'handleError']);
+        set_exception_handler([$this, 'handleException']);
     }
 
     private function _log($type, $message)
@@ -116,7 +119,7 @@ class ErrorHandler
         $this->_logWrite($message, $level);
 
         if ($this->display_errors) {
-            print "{$level}: {$message}";
+            echo "{$level}: {$message}";
         }
     }
 
@@ -164,6 +167,7 @@ class ErrorHandler
     private function _formatMessage($message, $file, $line, $trace = '')
     {
         $message = "{$file}#{$line}: {$message}";
+
         return <<<MSG
 $message
 $trace
