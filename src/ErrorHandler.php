@@ -15,7 +15,6 @@
 namespace GaoweiSpace\ErrorHandler;
 
 use Psr\Log\LogLevel;
-use Sentry\Severity;
 
 class ErrorHandler
 {
