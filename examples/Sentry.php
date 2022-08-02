@@ -6,5 +6,5 @@ require __DIR__.'/ErrorHandlerExample.php';
 
 $test = new ErrorHandlerExample();
 
-$test->testInitForSentry(3);
+$test->testInitForSentry(2);
 $test->testCaptureMessageForSentry('测试', 'error');

@@ -152,26 +152,30 @@ class ErrorHandler
 
     private function _sentryCaptureMessage($message, $level)
     {
-        if ($this->handler !== 'sentry') {
-            return false;
-        }
-
-        if (!$this->sentry_options) {
-            return false;
-        }
-
-        \Sentry\init($this->sentry_options);
-        \Sentry\captureMessage($message, new Severity($level));
+        $this->_sentryCaptureException(new \ErrorException($message, 0, $this->_getErrorType($level)));
     }
 
-    private function _formatMessage($message, $file, $line, $trace = '')
+    private function _getErrorType($level)
     {
-        $message = "{$file}#{$line}: {$message}";
+        switch ($level) {
+            case 'fatal':
+                $type = 1;
+                break;
+            case 'error':
+                $type = 0;
+                break;
+            case 'warning':
+                $type = 2;
+                break;
+            case 'info':
+                $type = 8;
+                break;
+            default:
+                $type = 1;
+                break;
+        }
 
-        return <<<MSG
-$message
-$trace
-MSG;
+        return $type;
     }
 
     private function _getErrorLevel($type)
@@ -207,5 +211,15 @@ MSG;
         }
 
         return $level;
+    }
+
+    private function _formatMessage($message, $file, $line, $trace = '')
+    {
+        $message = "{$file}#{$line}: {$message}";
+
+        return <<<MSG
+$message
+$trace
+MSG;
     }
 }
