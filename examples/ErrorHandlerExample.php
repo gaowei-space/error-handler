@@ -52,6 +52,13 @@ class ErrorHandlerExample
                 'sample_rate'  => 1, // report rate, float range 0-1
                 'http_timeout' => 0.5,
             ],
+            'scope_user' => [
+                'id'       => 100,
+                'username' => 'dan',
+            ],
+            'scope_tags' => [
+                'game_role' => 'rookie'
+            ],
         ];
         ErrorHandler::init($options);
 
@@ -69,6 +76,13 @@ class ErrorHandlerExample
                 'environment'  => 'test',
                 'sample_rate'  => 1, // report rate, float range 0-1
                 'http_timeout' => 0.5,
+            ],
+            'scope_user' => [
+                'id'       => 100,
+                'username' => 'dan',
+            ],
+            'scope_tags' => [
+                'game_role' => 'rookie'
             ],
         ];
         ErrorHandler::create($options)->captureMessage($message, $level);

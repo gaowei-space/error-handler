@@ -1,13 +1,15 @@
 {
-    "name": "gaowei-space\/error-handler",
+    "name": "gaowei-space/error-handler",
     "description": "ErrorHandler is used to catch all php runtime errors and supports reporting to monolog or sentry.",
     "license": "MIT",
+    "homepage": "https://github.com/gaowei-space/error-handler",
     "authors": [
         {
             "name": "gaowei",
             "email": "huyao9950@hotmail.com"
         }
     ],
+    "version": "1.2.0",
     "require": {
         "php": "^7.2|^8.0",
         "sentry/sdk": "^3.2",

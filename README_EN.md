@@ -32,6 +32,13 @@ $options = [
         'sample_rate'  => 1,
         'http_timeout' => 0.5,
     ],
+    'scope_user' => [
+        'id'       => 10,
+        'username' => 'dan',
+    ],
+    'scope_tags' => [
+        'game_role' => 'rookie',
+    ],
 ];
 ErrorHandler::init($options);
 ```

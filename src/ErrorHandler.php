@@ -5,11 +5,11 @@
  *
  * @author gaowei <huyao9950@hotmail.com>
  *
- * @version 1.0.2
+ * @version 1.2.0
  *
  * @copyright gaowei
  * @created_at 2022-05-26
- * @updated_at 2022-08-01
+ * @updated_at 2023-04-12
  */
 
 namespace GaoweiSpace\ErrorHandler;
@@ -19,18 +19,22 @@ use Psr\Log\LogLevel;
 class ErrorHandler
 {
     public $logger;
-    public $handler = 'logger';  // logger | sentry
+    public $handler        = 'logger';  // logger | sentry
     public $display_errors = false;
     public $sentry_options = [];
-    public $report_level = E_ALL;
+    public $report_level   = E_ALL;
+    public $scope_user     = [];
+    public $scope_tags     = [];
 
     public function __construct(array $options = [])
     {
         $this->display_errors = $options['display_errors'];
-        $this->handler = $options['handler'];
-        $this->logger = $options['logger'];
+        $this->handler        = $options['handler'];
+        $this->logger         = $options['logger'];
         $this->sentry_options = $options['sentry_options'];
-        $this->report_level = $options['report_level'];
+        $this->report_level   = $options['report_level'];
+        $this->scope_user     = $options['scope_user'];
+        $this->scope_tags     = $options['scope_tags'];
     }
 
     public static function init(array $options = [])
@@ -58,6 +62,8 @@ class ErrorHandler
             'sentry_options' => [],
             'display_errors' => false,
             'report_level'   => E_ALL,
+            'scope_user'     => [],
+            'scope_tags'     => [],
         ], $options);
     }
 
@@ -146,7 +152,27 @@ class ErrorHandler
         }
 
         \Sentry\init($this->sentry_options);
+
+        $this->_setScope();
+
         \Sentry\captureException($exception);
+    }
+
+    private function _setScope()
+    {
+        $scope_user = $this->scope_user;
+        $scope_tags = $this->scope_tags;
+        if (!$scope_user && !$scope_tags) {
+            return false;
+        }
+
+        \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($scope_user, $scope_tags): void {
+            $scope->setUser($scope_user);
+
+            foreach ($scope_tags as $tag_name => $tag_value) {
+                $scope->setTag($tag_name, $tag_value);
+            }
+        });
     }
 
     private function _sentryCaptureMessage($message, $level)
